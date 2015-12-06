@@ -20,11 +20,17 @@ BRANCH  = $(shell git rev-parse --abbrev-ref HEAD)
 # Tasks
 #
 
-build: node_modules
-	@browserify index.js -o bundle.js
+build: node_modules assets styles scripts
 
 watch: node_modules
-	@watchify index.js -o bundle.js
+	@make -j3 watch-assets watch-js
+watch-assets:
+	@watch make assets styles
+watch-js:
+	@budo index.js:bundle.js \
+		--dir build \
+		--port $(PORT) \
+		--live | garnish
 
 deploy:
 	@echo "Deploying branch \033[0;33m$(BRANCH)\033[0m to Github pages..."
@@ -43,14 +49,18 @@ deploy:
 
 clean:
 	@rm -rf build
-clean-deps:
-	@rm -rf node_modules
 
 #
 # Shorthands
 #
 
 install: node_modules
+assets: build/index.html build/mark.svg
+	@true
+styles: build/bundle.css
+	@true
+scripts: build/bundle.js
+	@true
 
 #
 # Targets
@@ -58,6 +68,18 @@ install: node_modules
 
 node_modules: package.json
 	@npm install
+
+build/%: %
+	@mkdir -p $(@D)
+	@cp -r $< $@
+
+build/bundle.js: index.js
+	@mkdir -p $(@D)
+	@browserify index.js -o build/bundle.js
+
+build/bundle.css: index.css
+	@mkdir -p $(@D)
+	@cp -r $< $@
 
 #
 # Phony

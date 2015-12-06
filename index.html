@@ -7,67 +7,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
 
 	<link rel="shortcut icon" type="image/ico" href="favicon.png" />
+
+	<link href="bundle.css" rel="stylesheet" type="text/css">
 	<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
 
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 
-	<style>
-
-		html,
-		body {
-			background: #202020;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
-		}
-
-		img {
-			max-width: 100%;
-			height: auto;
-		}
-
-		main {
-			position: absolute;
-			top: 50%; left: 50%;
-			transform: translate(-50%, -50%);
-			text-align: center;
-		}
-
-		.mark {
-			margin-bottom: 2rem;
-		}
-
-		.links {
-			display: flex;
-			justify-content: center;
-			font-family: "Inconsolata", "Monaco", monospace;
-			font-size: 13px;
-			vertical-align: middle;
-		}
-
-		.links a {
-			color: #a2a2a2;
-			text-decoration: none;
-		}
-
-		.links a:hover {
-			color: #f0f0f0;
-		}
-
-		.divider {
-			padding: 0 0.75rem;
-			color: #666;
-			vertical-align: middle;
-		}
-
-	</style>
 </head>
 <body>
-	<main class="loading">
-		<div class="art">
-			<canvas width="200" height="200"></canvas>
-		</div>
+	<main>
 		<div class="mark">
 			<img src="/mark.svg" />
 		</div>
@@ -77,6 +27,5 @@
 			<a href="https://github.com/polysoph">Github</a>
 		</div>
 	</main>
-	<script src="index.js" async></script>
 </body>
 </html>

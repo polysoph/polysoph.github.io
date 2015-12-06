@@ -1,59 +1,56 @@
-/*!
- * domready (c) Dustin Diaz 2014 - License MIT
- */
-!function(e,t){typeof module!="undefined"?module.exports=t():typeof define=="function"&&typeof define.amd=="object"?define(t):this[e]=t()}("domready",function(){var e=[],t,n=document,r=n.documentElement.doScroll,i="DOMContentLoaded",s=(r?/^loaded|^c/:/^loaded|^i|^c/).test(n.readyState);return s||n.addEventListener(i,t=function(){n.removeEventListener(i,t),s=1;while(t=e.shift())t()}),function(t){s?setTimeout(t,0):e.push(t)}})
 
-;(function() {
-	var lastTime = 0;
-	var vendors = ['ms', 'moz', 'webkit', 'o']
-	for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-		window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame']
-		window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-			|| window[vendors[x]+'CancelRequestAnimationFrame']
-	}
+var ready = require('domready')
+var raf = require('component-raf')
 
-	if (!window.requestAnimationFrame)
-	window.requestAnimationFrame = function(callback, element) {
-		var currTime = new Date().getTime()
-		var timeToCall = Math.max(0, 16 - (currTime - lastTime))
-		var id = window.setTimeout(function() { callback(currTime + timeToCall) },
-		timeToCall)
-		lastTime = currTime + timeToCall
-		return id
-	};
-
-	if (!window.cancelAnimationFrame)
-	window.cancelAnimationFrame = function(id) {
-		clearTimeout(id)
-	}
-}())
-
-
-domready(function () {
-
-	var TWO_PI = Math.PI * 2
+ready(function () {
 
 	var canvas = document.querySelector('canvas')
 	var ctx = canvas.getContext('2d')
+
+	var TWO_PI = Math.PI * 2
 
 	var width
 	var height
 
 	var particleCount = 4
-	var frameCount
+	var frameCount = 0
 
 	function render () {
-		ctx.clearRect(0, 0, width, height)
+		frameCount++
+		ctx.fillStyle = 'rgba(32, 32, 32, 0.97)'
+		ctx.rect(0, 0, width, height)
+		ctx.fill()
 		ctx.fillStyle = '#fff'
 		ctx.beginPath()
-		ctx.arc(width / 2, height / 2, 15, 0, TWO_PI, true)
+		ctx.translate(width / 2, height / 2)
+		ctx.arc(0, 0, 12, 0, TWO_PI, true)
 		ctx.fill()
+		for (let i = 0; i < particleCount; i++) {
+			dot(width/2, height/2, Math.PI * (i/particleCount), width/4)
+		}
+		raf(render)
+	}
+
+	function dot (x, y, rotation, radius) {
+		ctx.save()
+		ctx.rotate(rotation)
+		theta = frameCount / 20.0
+		ctx.beginPath()
+		ctx.arc(
+			Math.cos(theta + radius) * radius / 2,
+			Math.sin(theta + rotation) * radius * 1.5,
+			4, 0, TWO_PI, true
+		)
+		ctx.fill()
+		ctx.restore()
 	}
 
 	function resize () {
 		width = canvas.width
 		height = canvas.height
 	}
+
+	window.addEventListener('resize', resize)
 
 	resize()
 	render()
